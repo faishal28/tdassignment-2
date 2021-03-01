@@ -1,6 +1,6 @@
 # Assignment 2
 
-The Following ansible script
+The Following script
 
 - Creates Following infrastructure on AWS using Terraform:
 	- A Security Group
