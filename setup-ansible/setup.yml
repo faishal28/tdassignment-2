@@ -1,0 +1,37 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - name:
+    pip:
+      name: boto3
+      state: present
+
+  - name: install apache
+    package:
+      name: apache2
+      state: present
+
+  - name: Copy html file
+    ansible.builtin.copy:
+      src: ./index.html
+      dest: /var/www/html/index.html
+
+  #configuring ports and logs    
+  - name: creating required directories
+    file:
+      path: /var/log/tdcustom
+      state: directory
+    file:
+      path: /var/log/tdcustom/accesslogs
+      state: directory
+
+  - name: apache2 listen on port 8900 ports.conf
+    lineinfile: dest=/etc/apache2/ports.conf regexp="^Listen 80" line="Listen 8900" state=present
+
+  - name: Copy configuration files
+    ansible.builtin.copy:
+      src: ./000-default.conf
+      dest: /etc/apache2/sites-available/000-default.conf
+
+  - name: restart apache2
+    service: name=apache2 state=restarted
